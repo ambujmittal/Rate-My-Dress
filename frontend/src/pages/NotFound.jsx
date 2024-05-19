@@ -1,5 +1,5 @@
 // NotFound.js
-import { Box, Heading, Text, Button } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, useColorMode } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
@@ -8,14 +8,16 @@ const NotFound = () => {
   const handleClick = () => {
     navigate("/");
   };
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
 
   return (
     <Box
       textAlign="center"
       py={10}
       px={6}
-      bg="black"
-      color="white"
+      bg={isDark ? "black" : "#fff"}
+      color={isDark ? "#fff" : "black"}
       height="80vh"
       display="flex"
       flexDirection="column"
