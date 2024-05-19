@@ -11,6 +11,8 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import NotFound from "./pages/NotFound";
+
 function App() {
   const user = useRecoilValue(userAtom);
   const { pathname } = useLocation();
@@ -60,6 +62,7 @@ function App() {
             path="/settings"
             element={user ? <SettingsPage /> : <Navigate to={"/auth"} />}
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>
     </Box>

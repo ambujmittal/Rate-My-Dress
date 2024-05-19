@@ -18,6 +18,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { DeleteIcon } from "@chakra-ui/icons";
 import postsAtom from "../atoms/postsAtom";
+import NotFound from "./NotFound";
 
 const PostPage = () => {
   const { user, loading } = useGetUserProfile();
@@ -74,7 +75,7 @@ const PostPage = () => {
     );
   }
 
-  if (!currentPost) return null;
+  if (!currentPost) return <NotFound />;
 
   return (
     <>

@@ -15,7 +15,7 @@ const styles = {
     body: {
       color: mode("gray.800", "whiteAlpha.900")(props),
 
-      bg: mode("#fff", "#101010")(props),
+      bg: mode("#fff", "black")(props),
     },
   }),
 };

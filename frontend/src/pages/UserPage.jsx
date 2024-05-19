@@ -7,6 +7,7 @@ import Post from "../components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
+import NotFound from "./NotFound";
 
 const UserPage = () => {
   const { user, loading } = useGetUserProfile();
@@ -42,7 +43,7 @@ const UserPage = () => {
     );
   }
 
-  if (!user && !loading) return <h1>User not found</h1>;
+  if (!user && !loading) return <NotFound />;
 
   return (
     <>
