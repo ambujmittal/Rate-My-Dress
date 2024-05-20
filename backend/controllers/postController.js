@@ -29,7 +29,9 @@ const createPost = async (req, res) => {
     }
 
     if (img) {
-      const uploadedResponse = await cloudinary.uploader.upload(img);
+      const uploadedResponse = await cloudinary.uploader.upload(img, {
+        transformation: [{ fetch_format: "auto", quality: "auto" }],
+      });
       img = uploadedResponse.secure_url;
     }
 

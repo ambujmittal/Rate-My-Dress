@@ -179,7 +179,9 @@ const updateUser = async (req, res) => {
         );
       }
 
-      const uploadedResponse = await cloudinary.uploader.upload(profilePic);
+      const uploadedResponse = await cloudinary.uploader.upload(profilePic, {
+        transformation: [{ fetch_format: "auto", quality: "auto" }],
+      });
       profilePic = uploadedResponse.secure_url;
     }
 
