@@ -1,5 +1,6 @@
 import Post from "../models/postModel.js";
 import User from "../models/userModel.js";
+import Notification from "../models/notificationModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 const createPost = async (req, res) => {
@@ -99,6 +100,13 @@ const likeUnlikePost = async (req, res) => {
     } else {
       post.likes.push(userId);
       await post.save();
+      const notification = new Notification({
+        from: userId,
+        to: post.postedBy,
+        postId: postId,
+        type: "like",
+      });
+      await notification.save();
       res.status(200).json({ message: "Post liked successfully" });
     }
   } catch (err) {
@@ -127,7 +135,13 @@ const replyToPost = async (req, res) => {
 
     post.replies.push(reply);
     await post.save();
-
+    const notification = new Notification({
+      from: userId,
+      to: post.postedBy,
+      postId: postId,
+      type: "comment",
+    });
+    await notification.save();
     res.status(200).json(reply);
   } catch (err) {
     res.status(500).json({ error: err.message });

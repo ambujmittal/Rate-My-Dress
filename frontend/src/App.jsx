@@ -12,6 +12,7 @@ import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
+import NotificationPage from "./pages/NotificationPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -62,6 +63,11 @@ function App() {
             path="/settings"
             element={user ? <SettingsPage /> : <Navigate to={"/auth"} />}
           />
+          <Route
+            path="/notifications"
+            element={user ? <NotificationPage /> : <Navigate to="/auth" />}
+          />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>

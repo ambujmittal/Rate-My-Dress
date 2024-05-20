@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import Post from "../models/postModel.js";
+import Notification from "../models/notificationModel.js";
 import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import { v2 as cloudinary } from "cloudinary";
@@ -136,6 +137,13 @@ const followUnFollowUser = async (req, res) => {
     } else {
       await User.findByIdAndUpdate(id, { $push: { followers: req.user._id } });
       await User.findByIdAndUpdate(req.user._id, { $push: { following: id } });
+      const notification = new Notification({
+        from: req.user._id,
+        to: userToModify._id,
+        type: "follow",
+      });
+      await notification.save();
+
       res.status(200).json({ message: "User followed successfully" });
     }
   } catch (err) {
