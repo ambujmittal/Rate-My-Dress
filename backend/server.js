@@ -12,7 +12,6 @@ import { app, server } from "./socket/socket.js";
 import job from "./cron/cron.js";
 
 dotenv.config();
-
 connectDB();
 job.start();
 
@@ -40,6 +39,6 @@ if (process.env.NODE_ENV.trim() === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
-server.listen(PORT, () =>
-  console.log(`Server started at http://localhost:${PORT}`)
-);
+server.listen(PORT, () => {
+  console.log(`Server started at http://localhost:${PORT}`);
+});

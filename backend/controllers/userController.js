@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import { client } from "../redis/index.js";
 
 const getUserProfile = async (req, res) => {
   const { query } = req.params;
@@ -117,16 +118,19 @@ const logoutUser = (req, res) => {
 const followUnFollowUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user._id;
     const userToModify = await User.findById(id);
-    const currentUser = await User.findById(req.user._id);
+    const currentUser = await User.findById(userId);
 
-    if (id === req.user._id.toString())
+    if (id === userId.toString())
       return res
         .status(400)
         .json({ error: "You cannot follow/unfollow yourself" });
 
     if (!userToModify || !currentUser)
       return res.status(400).json({ error: "User not found" });
+
+    await client.del(`suggestedUsers_${userId}`);
 
     const isFollowing = currentUser.following.includes(id);
 
@@ -217,7 +221,10 @@ const updateUser = async (req, res) => {
 const getSuggestedUsers = async (req, res) => {
   try {
     const userId = req.user._id;
-
+    const cache = await client.get(`suggestedUsers_${userId}`);
+    if (cache) {
+      return res.status(200).json(JSON.parse(cache));
+    }
     const usersFollowedByYou = await User.findById(userId).select("following");
 
     const users = await User.aggregate([
@@ -236,6 +243,11 @@ const getSuggestedUsers = async (req, res) => {
     const suggestedUsers = filteredUsers.slice(0, 4);
 
     suggestedUsers.forEach((user) => (user.password = null));
+
+    await client.set(
+      `suggestedUsers_${userId}`,
+      JSON.stringify(suggestedUsers)
+    );
 
     res.status(200).json(suggestedUsers);
   } catch (error) {
